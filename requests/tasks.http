@@ -9,8 +9,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "",
-  "description": ""
+  "title": "Task 100",
+  "description": "Ini adalah Task ke 100"
 }
 
 ### Get task by id
