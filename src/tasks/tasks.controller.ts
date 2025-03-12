@@ -15,8 +15,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Controller('tasks')
 export class TasksController {
-  // eslint-disable-next-line prettier/prettier
-  constructor(private readonly tasksService: TasksService) { }
+  constructor(private readonly tasksService: TasksService) {}
 
   @Version('1')
   @Post()
@@ -26,7 +25,8 @@ export class TasksController {
 
   @Version('1')
   @Get()
-  findAll() {
+  async findAll() {
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Test untuk Timeout Interceptor
     return this.tasksService.findAll();
   }
 
