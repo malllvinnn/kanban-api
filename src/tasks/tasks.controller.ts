@@ -32,7 +32,7 @@ export class TasksController {
 
   @Version('1')
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     const task = this.tasksService.findOne(id);
     if (task === undefined) throw new NotFoundException('task not found');
     return task;
@@ -40,7 +40,7 @@ export class TasksController {
 
   @Version('1')
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateTaskDto: UpdateTaskDto) {
+  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
     const task = this.tasksService.update(id, updateTaskDto);
     if (task === undefined) throw new NotFoundException('task not found');
     return task;
@@ -48,7 +48,7 @@ export class TasksController {
 
   @Version('1')
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     return this.tasksService.remove(id);
   }
 }

@@ -9,7 +9,7 @@ export const TASK_STATUSES = [
 export type TaskStatus = (typeof TASK_STATUSES)[number];
 
 export class Task {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: TaskStatus;
@@ -18,7 +18,7 @@ export class Task {
   updateAt: number; // unix timestamp
   isDeleted: boolean;
 
-  constructor(id: number, title: string, description: string) {
+  constructor(id: string, title: string, description: string) {
     const timestamp = Date.now();
     this.id = id;
     this.title = title;
