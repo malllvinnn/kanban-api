@@ -1,0 +1,11 @@
+services:
+  kanban_be_postgres:
+    container_name: kanban_be_postgres
+    image: postgres:latest
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kanban-be
+      POSTGRES_PASSWORD: Selaludia1
+      POSTGRES_DB: kanban-be
