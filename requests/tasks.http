@@ -9,25 +9,26 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "new task",
-  "description": "this is new task"
+  "title": "new task 2",
+  "description": "this is new task two"
 }
 
 ### Get task by id
-GET http://localhost:3000/v1/tasks/266849ca-c64e-49c2-bb89-afd73f2697d5
+GET http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
 Content-Type: application/json
 Accept: application/json
 
 ### Update task
-PATCH http://localhost:3000/v1/tasks/266849ca-c64e-49c2-bb89-afd73f2697d5
+PATCH http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
 Content-Type: application/json
 Accept: application/json
 
 {
+  "title": "new task 4 update",
   "status": "DONE"
 }
 
 ### Delete task
-DELETE  http://localhost:3000/v1/tasks/266849ca-c64e-49c2-bb89-afd73f2697d5
+DELETE  http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
 Content-Type: application/json
 Accept: application/json

@@ -19,36 +19,37 @@ export class TasksController {
 
   @Version('1')
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  async create(@Body() createTaskDto: CreateTaskDto) {
+    return await this.tasksService.create(createTaskDto);
   }
 
   @Version('1')
   @Get()
   async findAll() {
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Test untuk Timeout Interceptor
-    return this.tasksService.findAll();
+    return await this.tasksService.findAll();
   }
 
   @Version('1')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const task = this.tasksService.findOne(id);
-    if (task === undefined) throw new NotFoundException('task not found');
+  async findOne(@Param('id') id: string) {
+    const task = await this.tasksService.findOne(id);
+    if (!task) throw new NotFoundException('task not found');
     return task;
   }
 
   @Version('1')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    const task = this.tasksService.update(id, updateTaskDto);
-    if (task === undefined) throw new NotFoundException('task not found');
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+    const task = await this.tasksService.update(id, updateTaskDto);
+    if (!task) throw new NotFoundException('task not found');
     return task;
   }
 
   @Version('1')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(id);
+  async remove(@Param('id') id: string) {
+    const task = await this.tasksService.remove(id);
+    if (!task) throw new NotFoundException('task not found');
+    return task;
   }
 }

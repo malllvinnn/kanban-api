@@ -1,92 +1,68 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
-import { randomUUID } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
-  private tasks: Task[] = [
-    {
-      id: randomUUID(),
-      title: 'Task 4',
-      description: 'This is Task 4',
-      status: 'TODO',
-      ownerId: -1,
-      createAt: Date.now(),
-      updateAt: Date.now(),
+  constructor(
+    @InjectRepository(Task)
+    private taskRepository: Repository<Task>,
+  ) {}
+
+  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+    const task = this.taskRepository.create({
+      ...createTaskDto,
+    });
+    return await this.taskRepository.save(task);
+  }
+
+  async findAll(): Promise<Task[]> {
+    return await this.taskRepository.findBy({ isDeleted: false });
+  }
+
+  async findOne(id: string): Promise<Task | null> {
+    return await this.taskRepository.findOneBy({ id: id, isDeleted: false });
+  }
+
+  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
+    const task = await this.taskRepository.findOneBy({
+      id: id,
       isDeleted: false,
-    },
-    {
-      id: randomUUID(),
-      title: 'Task 3',
-      description: 'This is Task 3',
-      status: 'TODO',
-      ownerId: -1,
-      createAt: Date.now(),
-      updateAt: Date.now(),
-      isDeleted: false,
-    },
-    {
-      id: randomUUID(),
-      title: 'Task 2',
-      description: 'This is Task 4',
-      status: 'TODO',
-      ownerId: -1,
-      createAt: Date.now(),
-      updateAt: Date.now(),
-      isDeleted: true,
-    },
-  ];
+    });
 
-  create(createTaskDto: CreateTaskDto) {
-    // const nextId = Math.max(...this.tasks.map((t) => t.id)) + 1;
-    const nextId = randomUUID();
+    if (!task) return null;
 
-    const task = new Task(
-      nextId,
-      createTaskDto.title,
-      createTaskDto.description,
-    );
-
-    this.tasks.push(task);
-
-    return task;
-  }
-
-  findAll() {
-    return this.tasks.filter((task) => !task.isDeleted);
-  }
-
-  findOne(id: string): Task | undefined {
-    return this.tasks.find((t) => t.id === id && !t.isDeleted);
-  }
-
-  update(id: string, updateTaskDto: UpdateTaskDto) {
-    const task = this.findOne(id);
-    if (task !== undefined) {
-      if (updateTaskDto.status) {
-        task.status = updateTaskDto.status;
-      }
-
-      if (updateTaskDto.title) {
-        task.title = updateTaskDto.title;
-      }
-
-      if (updateTaskDto.description) {
-        task.description = updateTaskDto.description;
-      }
-
-      task.updateAt = Date.now();
+    if (updateTaskDto.title !== undefined) {
+      task.title = updateTaskDto.title;
     }
-    return task;
+
+    if (updateTaskDto.description !== undefined) {
+      task.description = updateTaskDto.description;
+    }
+
+    if (updateTaskDto.status !== undefined) {
+      task.status = updateTaskDto.status;
+    }
+
+    task.updateAt = Date.now();
+
+    return await this.taskRepository.save(task);
   }
 
-  remove(id: string) {
-    const taskIndex = this.tasks.findIndex((t) => t.id === id && !t.isDeleted);
-    if (taskIndex < 0) throw new NotFoundException(`Id ${id} Not Found`);
-    this.tasks[taskIndex].isDeleted = true;
-    this.tasks[taskIndex].updateAt = Date.now();
-    return this.tasks[taskIndex];
+  async remove(id: string): Promise<Task | null> {
+    const task = await this.taskRepository.findOneBy({
+      id: id,
+      isDeleted: false,
+    });
+
+    if (!task) return null;
+
+    task.isDeleted = true;
+    task.updateAt = Date.now();
+
+    return await this.taskRepository.save(task);
   }
 }

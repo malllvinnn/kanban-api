@@ -2,7 +2,7 @@ import { IsAscii, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateTaskDto {
   @IsNotEmpty({ message: 'title tidak boleh kosong' })
-  @Length(3, 10, { message: 'panjang title harus 3 - 10 karakter' })
+  @Length(3, 25, { message: 'panjang title harus 3 - 25 karakter' })
   @IsAscii({ message: 'karakter title harus berformat ASCII' })
   readonly title: string;
 
