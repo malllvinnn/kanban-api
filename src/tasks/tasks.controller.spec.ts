@@ -6,6 +6,8 @@ import { randomUUID } from 'crypto';
 import { NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from 'src/tasks/dto/create-task.dto';
 import { UpdateTaskDto } from 'src/tasks/dto/update-task.dto';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -14,7 +16,10 @@ describe('TasksController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TasksController],
-      providers: [TasksService],
+      providers: [
+        TasksService,
+        { provide: getRepositoryToken(Task), useClass: Repository<Task> },
+      ],
     }).compile();
 
     controller = module.get<TasksController>(TasksController);
@@ -30,7 +35,9 @@ describe('TasksController', () => {
   });
 
   it('find all should returns empty tasks', async () => {
-    jest.spyOn(service, 'findAll').mockImplementation(() => [] as Task[]);
+    jest
+      .spyOn(service, 'findAll')
+      .mockImplementation(() => Promise.resolve([] as Task[]));
 
     const tasks = await controller.findAll();
     expect(tasks).toHaveLength(0);
@@ -42,36 +49,38 @@ describe('TasksController', () => {
       new Task(randomUUID(), 'task two', 'this is task two'),
       new Task(randomUUID(), 'task three', 'this is task three'),
     ];
-    jest.spyOn(service, 'findAll').mockImplementation(() => tasks);
+    jest
+      .spyOn(service, 'findAll')
+      .mockImplementation(() => Promise.resolve(tasks));
 
     const actual = await controller.findAll();
     expect(actual).toBe(tasks);
   });
 
-  it('findOne should be returns task', () => {
+  it('findOne should be returns task', async () => {
     const task: Task = new Task(randomUUID(), 'task two', 'this is task two');
     jest
       .spyOn(service, 'findOne')
-      .mockImplementation((id: string): Task | undefined => {
+      .mockImplementation((id: string): Promise<Task | null> => {
         expect(id).toBe(task.id);
-        return task;
+        return Promise.resolve(task);
       });
-    const actual = controller.findOne(task.id);
+    const actual = await controller.findOne(task.id);
     expect(actual).toBe(task);
   });
 
-  it('findOne should be thrown not found expection', () => {
+  it('findOne should be thrown not found expection', async () => {
     const mockId = randomUUID();
     jest
       .spyOn(service, 'findOne')
-      .mockImplementation((id: string): Task | undefined => {
+      .mockImplementation((id: string): Promise<Task | null> => {
         expect(id).toBe(mockId);
-        return undefined;
+        return Promise.resolve(null);
       });
-    expect(() => controller.findOne(mockId)).toThrow(NotFoundException);
+    await expect(controller.findOne(mockId)).rejects.toThrow(NotFoundException);
   });
 
-  it('create should be returns task', () => {
+  it('create should be returns task', async () => {
     const createTaskDto: CreateTaskDto = {
       title: 'new task',
       description: 'this is new task',
@@ -83,15 +92,15 @@ describe('TasksController', () => {
     );
     jest
       .spyOn(service, 'create')
-      .mockImplementation((dto: CreateTaskDto): Task => {
+      .mockImplementation((dto: CreateTaskDto): Promise<Task> => {
         expect(dto).toBe(createTaskDto);
-        return createTask;
+        return Promise.resolve(createTask);
       });
-    const actual = controller.create(createTaskDto);
+    const actual = await controller.create(createTaskDto);
     expect(actual).toBe(createTask);
   });
 
-  it('update should be returns task', () => {
+  it('update should be returns task', async () => {
     const oldTask: Task = new Task(
       randomUUID(),
       'new task',
@@ -107,41 +116,58 @@ describe('TasksController', () => {
     jest
       .spyOn(service, 'update')
       .mockImplementation(
-        (id: string, dto: UpdateTaskDto): Task | undefined => {
+        (id: string, dto: UpdateTaskDto): Promise<Task | null> => {
           expect(id).toBe(oldTask.id);
           expect(dto).toBe(updateTaskDto);
-          return updatedTask;
+          return Promise.resolve(updatedTask);
         },
       );
-    const actual = controller.update(oldTask.id, updateTaskDto);
+    const actual = await controller.update(oldTask.id, updateTaskDto);
     expect(actual).toBe(updatedTask);
   });
 
-  it('update should be thrown not found expection', () => {
+  it('update should be thrown not found expection', async () => {
     const updateTaskDto: UpdateTaskDto = {
       title: 'new task',
       description: 'this is new task',
       status: 'TODO',
     };
 
-    jest.spyOn(service, 'update').mockImplementation((): Task | undefined => {
-      return undefined;
-    });
+    jest
+      .spyOn(service, 'update')
+      .mockImplementation((): Promise<Task | null> => {
+        return Promise.resolve(null);
+      });
 
-    expect(() => controller.update('fakeUUID', updateTaskDto)).toThrow(
+    await expect(controller.update('fakeUUID', updateTaskDto)).rejects.toThrow(
       NotFoundException,
     );
   });
 
-  it('delete should be returns task', () => {
+  it('delete should be returns task', async () => {
     const task: Task = new Task(randomUUID(), 'new task', 'this is new task');
 
-    jest.spyOn(service, 'remove').mockImplementation((id: string): Task => {
-      expect(id).toBe(task.id);
-      return task;
-    });
+    jest
+      .spyOn(service, 'remove')
+      .mockImplementation((id: string): Promise<Task | null> => {
+        expect(id).toBe(task.id);
+        return Promise.resolve(task);
+      });
 
-    const actual = controller.remove(task.id);
+    const actual = await controller.remove(task.id);
     expect(actual).toBe(task);
+  });
+
+  it('delete should be throw not found expection', async () => {
+    jest
+      .spyOn(service, 'remove')
+      .mockImplementation((id: string): Promise<Task | null> => {
+        expect(id).toBe('fakeUUID');
+        return Promise.resolve(null);
+      });
+
+    await expect(controller.remove('fakeUUID')).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

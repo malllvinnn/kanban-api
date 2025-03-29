@@ -1,88 +1,163 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from 'src/tasks/dto/create-task.dto';
-import { NotFoundException } from '@nestjs/common';
+// import { NotFoundException } from '@nestjs/common';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Task } from 'src/tasks/entities/task.entity';
+import { Repository } from 'typeorm';
+import { randomUUID } from 'crypto';
 
 describe('TasksService', () => {
   let service: TasksService;
+  let repository: Repository<Task>;
+
+  const dto: CreateTaskDto = {
+    title: 'new task',
+    description: 'this is new task',
+  };
+
+  const mockTask = new Task(randomUUID(), dto.title, dto.description);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TasksService],
+      providers: [
+        TasksService,
+        {
+          provide: getRepositoryToken(Task),
+          // useClass: Repository<Task>,
+          useValue: {
+            findOneBy: jest.fn(), // Buat cari satu task berdasarkan kondisi
+            findBy: jest.fn(), // Buat ambil banyak task (filter)
+            findOne: jest.fn(), // Kalau kamu pakai findOne lama
+            save: jest.fn(), // Untuk menyimpan task baru / hasil update
+            create: jest.fn(), // Untuk membuat entitas baru (tanpa insert DB)
+            delete: jest.fn(), // Untuk hapus entitas (soft/hard delete)
+            update: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<TasksService>(TasksService);
+    repository = module.get<Repository<Task>>(getRepositoryToken(Task));
   });
 
-  it('should be defined', () => {
+  it('service should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('create should added new task', () => {
-    const dto: CreateTaskDto = {
-      title: 'new task',
-      description: 'this is new task',
-    };
-
-    const initialLength = service.findAll().length;
-    const task = service.create(dto);
-
-    expect(task.id).toBeDefined();
-    expect(typeof task.id).toBe('string');
-    expect(task.id).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
-    );
-    expect(task.title).toBe(dto.title);
-    expect(task.description).toBe(dto.description);
-    expect(task.isDeleted).toBe(false);
-    expect(service.findAll()).toHaveLength(initialLength + 1);
+  it('repository should be defined', () => {
+    expect(repository).toBeDefined();
   });
 
-  it('findOne should return the task with given id', () => {
-    const dto: CreateTaskDto = {
-      title: 'new task',
-      description: 'this is new task',
-    };
+  it('create should added new task', async () => {
+    jest.spyOn(repository, 'create').mockReturnValue(mockTask);
 
-    const createTask = service.create(dto);
-    const foundTask = service.findOne(createTask.id);
+    jest
+      .spyOn(repository, 'save')
+      .mockImplementation(() => Promise.resolve(mockTask));
 
-    expect(foundTask).toBeDefined();
-    expect(foundTask?.id).toBe(createTask.id);
-    expect(foundTask?.title).toBe(createTask.title);
-    expect(foundTask?.description).toBe(createTask.description);
+    const createTask = await service.create(dto);
+
+    expect(createTask).toBe(mockTask);
   });
 
-  it('should successfully update the task when id is found', () => {
-    const dto: CreateTaskDto = {
-      title: 'new task',
-      description: 'this is new task',
-    };
+  it('find All should tasks', async () => {
+    jest
+      .spyOn(repository, 'findBy')
+      .mockImplementation(
+        (filtered: { isDeleted: boolean }): Promise<Task[]> => {
+          expect(filtered.isDeleted).toBe(false);
+          return Promise.resolve([mockTask]);
+        },
+      );
 
-    const createTask = service.create(dto);
-    const updateTask = service.update(createTask.id, {
+    const result = await service.findAll();
+    expect(result).toEqual([mockTask]);
+  });
+
+  it('findOne should return the task with given id', async () => {
+    jest
+      .spyOn(repository, 'findOneBy')
+      .mockImplementation(
+        (filtered: { id: string; isDeleted: boolean }): Promise<Task> => {
+          expect(filtered.id).toBe(mockTask.id);
+          expect(filtered.isDeleted).toBe(false);
+          return Promise.resolve(mockTask);
+        },
+      );
+
+    const result = await service.findOne(mockTask.id);
+
+    expect(result).toBe(mockTask);
+  });
+
+  it('should successfully update the task when id is found', async () => {
+    jest
+      .spyOn(repository, 'findOneBy')
+      .mockImplementation(
+        (filtered: { id: string; isDeleted: boolean }): Promise<Task> => {
+          expect(filtered.id).toBe(mockTask.id);
+          expect(filtered.isDeleted).toBe(mockTask.isDeleted);
+          return Promise.resolve(mockTask);
+        },
+      );
+
+    jest
+      .spyOn(repository, 'save')
+      .mockImplementation((task: Task): Promise<Task> => {
+        return Promise.resolve(task);
+      });
+
+    const updateTask = await service.update(mockTask.id, {
       title: 'new task update',
       description: 'this is new task has been updated',
       status: 'DONE',
     });
-    expect(updateTask?.id).toBe(createTask.id);
-    expect(updateTask?.title).toBe('new task update');
-    expect(updateTask?.description).toBe('this is new task has been updated');
+
+    expect(updateTask?.id).toBe(mockTask.id);
+    expect(updateTask?.title).toBe(mockTask.title);
+    expect(updateTask?.description).toBe(mockTask.description);
     expect(updateTask?.status).toBe('DONE');
   });
 
-  it('should successfully delete the task when id is found', () => {
-    const dto: CreateTaskDto = {
-      title: 'new task',
-      description: 'this is new task',
-    };
+  it('update if should return null when task is not found', async () => {
+    jest.spyOn(repository, 'findOneBy').mockResolvedValue(null);
 
-    const createTask = service.create(dto);
-    const deleteTask = service.remove(createTask.id);
-    expect(deleteTask.id).toBe(createTask.id);
+    const updateTask = await service.update('fakeUUID', {
+      title: 'new task update',
+      description: 'this is new task has been updated',
+      status: 'DONE',
+    });
+
+    expect(updateTask).toBeNull();
   });
 
-  it('should throw NotFoundException if task id does not exist', () => {
-    expect(() => service.remove('fakeUUID')).toThrow(NotFoundException);
+  it('should successfully delete the task when id is found', async () => {
+    jest
+      .spyOn(repository, 'findOneBy')
+      .mockImplementation(
+        (filtered: { id: string; isDeleted: boolean }): Promise<Task> => {
+          expect(filtered.id).toBe(mockTask.id);
+          expect(filtered.isDeleted).toBe(mockTask.isDeleted);
+          return Promise.resolve(mockTask);
+        },
+      );
+
+    jest
+      .spyOn(repository, 'save')
+      .mockImplementation((task: Task): Promise<Task> => {
+        return Promise.resolve(task);
+      });
+
+    const deleteTask = await service.remove(mockTask.id);
+    expect(deleteTask?.id).toBe(mockTask.id);
+  });
+
+  it('delete if should return null when task is not found', async () => {
+    jest.spyOn(repository, 'findOneBy').mockResolvedValue(null);
+
+    const deleteTask = await service.remove('fakeUUID');
+    expect(deleteTask).toBeNull();
   });
 });
