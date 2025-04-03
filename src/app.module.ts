@@ -5,6 +5,8 @@ import { TasksModule } from './tasks/tasks.module';
 import { CoreModule } from 'src/core/core.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from 'src/tasks/entities/task.entity';
+import { UsersModule } from './users/users.module';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -17,9 +19,10 @@ import { Task } from 'src/tasks/entities/task.entity';
       username: 'kanban-be',
       password: 'Selaludia1',
       database: 'kanban-be',
-      entities: [Task],
+      entities: [Task, User],
       synchronize: true,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

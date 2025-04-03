@@ -1,0 +1,20 @@
+### create/register user
+POST http://localhost:3000/users/register/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Pericul Laili",
+  "email": "peri@gmail.com",
+  "password": "Selaluapace1"
+}
+
+### login user
+POST http://localhost:3000/users/login/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "yull@gmail.com",
+  "password": "Selaluapace1"
+}
