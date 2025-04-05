@@ -14,7 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { QueryFailedError } from 'typeorm';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { LoginDto } from 'src/users/dto/login.dto';
-import { UserLoggedDto } from 'src/users/dto/user-logged.dto';
+import { TokenDto } from 'src/auth/dto/token.dto';
 
 @Controller('users')
 export class UsersController {
@@ -39,7 +39,7 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto): Promise<UserLoggedDto | null> {
+  async login(@Body() loginDto: LoginDto): Promise<TokenDto | null> {
     const usr = await this.usersService.login(loginDto);
     if (!usr) throw new UnauthorizedException('email or password invalid');
     return usr;

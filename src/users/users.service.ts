@@ -6,13 +6,15 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCreatedDto } from 'src/users/dto/user-created.dto';
 import { LoginDto } from 'src/users/dto/login.dto';
-import { UserLoggedDto } from 'src/users/dto/user-logged.dto';
+import { AuthService } from 'src/auth/auth.service';
+import { TokenDto } from 'src/auth/dto/token.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly authService: AuthService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserCreatedDto> {
@@ -35,7 +37,7 @@ export class UsersService {
     });
   }
 
-  async login(loginDto: LoginDto): Promise<UserLoggedDto | null> {
+  async login(loginDto: LoginDto): Promise<TokenDto | null> {
     const usr = await this.userRepository.findOneBy({
       email: loginDto.email,
       isDeleted: false,
@@ -46,7 +48,9 @@ export class UsersService {
     const matched = await bcrypt.compare(loginDto.password, usr.passwordHash);
     if (!matched) return null;
 
-    return { id: usr.id, name: usr.name, email: usr.email };
+    const isGenToken = this.authService.genToken(usr);
+
+    return isGenToken;
   }
 
   findOne(id: number) {
