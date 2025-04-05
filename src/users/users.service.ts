@@ -5,6 +5,8 @@ import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserCreatedDto } from 'src/users/dto/user-created.dto';
+import { LoginDto } from 'src/users/dto/login.dto';
+import { UserLoggedDto } from 'src/users/dto/user-logged.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,6 +33,20 @@ export class UsersService {
       name: userSaved.name,
       email: userSaved.email,
     });
+  }
+
+  async login(loginDto: LoginDto): Promise<UserLoggedDto | null> {
+    const usr = await this.userRepository.findOneBy({
+      email: loginDto.email,
+      isDeleted: false,
+    });
+    if (!usr) return null;
+    console.log(usr);
+
+    const matched = await bcrypt.compare(loginDto.password, usr.passwordHash);
+    if (!matched) return null;
+
+    return { id: usr.id, name: usr.name, email: usr.email };
   }
 
   findOne(id: number) {
