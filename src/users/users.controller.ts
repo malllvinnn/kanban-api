@@ -15,11 +15,13 @@ import { QueryFailedError } from 'typeorm';
 import { rethrow } from '@nestjs/core/helpers/rethrow';
 import { LoginDto } from 'src/users/dto/login.dto';
 import { TokenDto } from 'src/auth/dto/token.dto';
+import { SkipAuth } from 'src/core/decorators/skipAuth.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @SkipAuth()
   @Post('register')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -37,6 +39,7 @@ export class UsersController {
     }
   }
 
+  @SkipAuth()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto): Promise<TokenDto | null> {

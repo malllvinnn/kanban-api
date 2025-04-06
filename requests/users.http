@@ -4,8 +4,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Yuri Boyka",
-  "email": "yur@gmail.com",
+  "name": "Mellow",
+  "email": "mell@gmail.com",
   "password": "Selaluapace1"
 }
 

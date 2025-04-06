@@ -2,6 +2,7 @@
 GET http://localhost:3000/v1/tasks/
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YzVjMDIyMi00OTFjLTQxZDUtYmMzMS1kMjhlYjFhNDFkZTYiLCJuYW1lIjoiWXVyaSBCb3lrYSIsImVtYWlsIjoieXVyQGdtYWlsLmNvbSIsImlhdCI6MTc0MzkxMzQxNCwiZXhwIjoxNzQzOTE3MDE0LCJhdWQiOiJrYW5iYW4tYmUiLCJpc3MiOiJrYW5iYW4tYmUifQ.BTdbjwt9ewLfSN-QgPQEnm45VbtWYgTvMcuzDUltgBY
 
 ### Create Task
 POST http://localhost:3000/v1/tasks/
