@@ -43,7 +43,6 @@ export class UsersService {
       isDeleted: false,
     });
     if (!usr) return null;
-    console.log(usr);
 
     const matched = await bcrypt.compare(loginDto.password, usr.passwordHash);
     if (!matched) return null;

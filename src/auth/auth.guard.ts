@@ -5,8 +5,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Request } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { AuthRequest } from 'src/auth/request/auth';
 import { SKIP_AUTH_KEY } from 'src/core/decorators/skipAuth.decorator';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
     if (skipped) return true;
 
     const httpContext = context.switchToHttp();
-    const request = httpContext.getRequest<Request>();
+    const request = httpContext.getRequest<AuthRequest>();
 
     const [kind, token] = request.headers.authorization?.split(' ') ?? ['', ''];
 
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate {
     if (!token) throw new UnauthorizedException('missing token');
 
     try {
-      request['authenticateUser'] = await this.authService.verifyToken(token);
+      request.authenticateUser = await this.authService.verifyToken(token);
     } catch (error) {
       throw new UnauthorizedException('invalid token', error);
     }

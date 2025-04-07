@@ -12,23 +12,36 @@ export class TasksService {
     private taskRepository: Repository<Task>,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<Task> {
+  async create(userId: string, createTaskDto: CreateTaskDto): Promise<Task> {
     const task = this.taskRepository.create({
       ...createTaskDto,
     });
+    task.ownerId = userId;
     return await this.taskRepository.save(task);
   }
 
-  async findAll(): Promise<Task[]> {
-    return await this.taskRepository.findBy({ isDeleted: false });
+  async findAll(userId: string): Promise<Task[]> {
+    return await this.taskRepository.findBy({
+      ownerId: userId,
+      isDeleted: false,
+    });
   }
 
-  async findOne(id: string): Promise<Task | null> {
-    return await this.taskRepository.findOneBy({ id: id, isDeleted: false });
+  async findOne(userId: string, id: string): Promise<Task | null> {
+    return await this.taskRepository.findOneBy({
+      ownerId: userId,
+      id: id,
+      isDeleted: false,
+    });
   }
 
-  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
+  async update(
+    userId: string,
+    id: string,
+    updateTaskDto: UpdateTaskDto,
+  ): Promise<Task | null> {
     const task = await this.taskRepository.findOneBy({
+      ownerId: userId,
       id: id,
       isDeleted: false,
     });
@@ -52,8 +65,9 @@ export class TasksService {
     return await this.taskRepository.save(task);
   }
 
-  async remove(id: string): Promise<Task | null> {
+  async remove(userId: string, id: string): Promise<Task | null> {
     const task = await this.taskRepository.findOneBy({
+      ownerId: userId,
       id: id,
       isDeleted: false,
     });

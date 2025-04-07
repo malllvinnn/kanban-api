@@ -2,34 +2,39 @@
 GET http://localhost:3000/v1/tasks/
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YzVjMDIyMi00OTFjLTQxZDUtYmMzMS1kMjhlYjFhNDFkZTYiLCJuYW1lIjoiWXVyaSBCb3lrYSIsImVtYWlsIjoieXVyQGdtYWlsLmNvbSIsImlhdCI6MTc0MzkxMzQxNCwiZXhwIjoxNzQzOTE3MDE0LCJhdWQiOiJrYW5iYW4tYmUiLCJpc3MiOiJrYW5iYW4tYmUifQ.BTdbjwt9ewLfSN-QgPQEnm45VbtWYgTvMcuzDUltgBY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
 
 ### Create Task
 POST http://localhost:3000/v1/tasks/
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
+
 
 {
-  "title": "new task 2",
-  "description": "this is new task two"
+  "title": "new task 2 by user",
+  "description": "this is new task two by user"
 }
 
 ### Get task by id
-GET http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
+GET http://localhost:3000/v1/tasks/d27a81b5-86fd-4f53-bffe-d67f9f8e61c8
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
 
 ### Update task
-PATCH http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
+PATCH http://localhost:3000/v1/tasks/d27a81b5-86fd-4f53-bffe-d67f9f8e61c8
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
 
 {
-  "title": "new task 4 update",
+  "title": "new task two update",
   "status": "DONE"
 }
 
 ### Delete task
-DELETE  http://localhost:3000/v1/tasks/979746fd-faf8-43cb-9166-b0de072fa7dd
+DELETE  http://localhost:3000/v1/tasks/44642933-449b-4e22-b316-80f08447e79a
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8

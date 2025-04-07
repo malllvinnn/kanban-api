@@ -24,8 +24,8 @@ export class Task {
   @Column({ type: 'enum', enum: TASK_STATUSES, default: 'TODO' })
   status: TaskStatus;
 
-  @Column({ type: 'bigint', nullable: false })
-  ownerId: number;
+  @Column({ type: 'uuid', nullable: false })
+  ownerId: string;
 
   @Column({ type: 'bigint', nullable: false, name: 'create_at' })
   createAt: number; // unix timestamp
@@ -42,7 +42,7 @@ export class Task {
     this.title = title;
     this.description = description;
     this.status = 'TODO';
-    this.ownerId = -1;
+    this.ownerId = 'uuid-format';
     this.createAt = timestamp;
     this.updateAt = timestamp;
     this.isDeleted = false;
