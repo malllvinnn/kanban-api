@@ -16,6 +16,8 @@ describe('TasksService', () => {
     description: 'this is new task',
   };
 
+  const userId: string = 'format-UUID';
+
   const mockTask = new Task(randomUUID(), dto.title, dto.description);
 
   beforeEach(async () => {
@@ -57,22 +59,25 @@ describe('TasksService', () => {
       .spyOn(repository, 'save')
       .mockImplementation(() => Promise.resolve(mockTask));
 
-    const createTask = await service.create(dto);
+    const createTask = await service.create(userId, dto);
+
+    createTask.ownerId = userId;
 
     expect(createTask).toBe(mockTask);
+    expect(createTask.ownerId).toBe(userId);
   });
 
   it('find All should tasks', async () => {
     jest
       .spyOn(repository, 'findBy')
       .mockImplementation(
-        (filtered: { isDeleted: boolean }): Promise<Task[]> => {
+        (filtered: { userId: string; isDeleted: boolean }): Promise<Task[]> => {
           expect(filtered.isDeleted).toBe(false);
           return Promise.resolve([mockTask]);
         },
       );
 
-    const result = await service.findAll();
+    const result = await service.findAll(userId);
     expect(result).toEqual([mockTask]);
   });
 
@@ -80,14 +85,18 @@ describe('TasksService', () => {
     jest
       .spyOn(repository, 'findOneBy')
       .mockImplementation(
-        (filtered: { id: string; isDeleted: boolean }): Promise<Task> => {
+        (filtered: {
+          userId: string;
+          id: string;
+          isDeleted: boolean;
+        }): Promise<Task> => {
           expect(filtered.id).toBe(mockTask.id);
           expect(filtered.isDeleted).toBe(false);
           return Promise.resolve(mockTask);
         },
       );
 
-    const result = await service.findOne(mockTask.id);
+    const result = await service.findOne(userId, mockTask.id);
 
     expect(result).toBe(mockTask);
   });
@@ -96,7 +105,11 @@ describe('TasksService', () => {
     jest
       .spyOn(repository, 'findOneBy')
       .mockImplementation(
-        (filtered: { id: string; isDeleted: boolean }): Promise<Task> => {
+        (filtered: {
+          userId: string;
+          id: string;
+          isDeleted: boolean;
+        }): Promise<Task> => {
           expect(filtered.id).toBe(mockTask.id);
           expect(filtered.isDeleted).toBe(mockTask.isDeleted);
           return Promise.resolve(mockTask);
@@ -109,7 +122,7 @@ describe('TasksService', () => {
         return Promise.resolve(task);
       });
 
-    const updateTask = await service.update(mockTask.id, {
+    const updateTask = await service.update(userId, mockTask.id, {
       title: 'new task update',
       description: 'this is new task has been updated',
       status: 'DONE',
@@ -124,7 +137,7 @@ describe('TasksService', () => {
   it('update if should return null when task is not found', async () => {
     jest.spyOn(repository, 'findOneBy').mockResolvedValue(null);
 
-    const updateTask = await service.update('fakeUUID', {
+    const updateTask = await service.update(userId, 'fakeUUID', {
       title: 'new task update',
       description: 'this is new task has been updated',
       status: 'DONE',
@@ -150,14 +163,14 @@ describe('TasksService', () => {
         return Promise.resolve(task);
       });
 
-    const deleteTask = await service.remove(mockTask.id);
+    const deleteTask = await service.remove(userId, mockTask.id);
     expect(deleteTask?.id).toBe(mockTask.id);
   });
 
   it('delete if should return null when task is not found', async () => {
     jest.spyOn(repository, 'findOneBy').mockResolvedValue(null);
 
-    const deleteTask = await service.remove('fakeUUID');
+    const deleteTask = await service.remove(userId, 'fakeUUID');
     expect(deleteTask).toBeNull();
   });
 });
