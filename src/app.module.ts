@@ -8,23 +8,53 @@ import { Task } from 'src/tasks/entities/task.entity';
 import { UsersModule } from './users/users.module';
 import { User } from 'src/users/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import config, { DatabaseConfig, JWTConfig } from 'src/config/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TasksModule,
     CoreModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'kanban-be',
-      password: 'Selaludia1',
-      database: 'kanban-be',
-      entities: [Task, User],
-      synchronize: true,
-    }),
     UsersModule,
     AuthModule,
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+      envFilePath: ['.env'],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cs: ConfigService) => {
+        const conf = cs.get<DatabaseConfig>('database');
+        return {
+          type: 'postgres',
+          entities: [Task, User],
+          ...conf,
+        };
+      },
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cs: ConfigService) => {
+        const conf = cs.get<JWTConfig>('jwt');
+
+        if (!conf) throw new Error('missing JWTConfig');
+
+        return {
+          secret: conf.secret,
+          signOptions: {
+            algorithm: conf.algorithm,
+            expiresIn: conf.expires,
+            audience: conf.audience,
+            issuer: conf.issuer,
+          },
+        };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

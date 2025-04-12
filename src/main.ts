@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AppConfig } from 'src/config/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +17,13 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ?? 3000);
+  const cs = app.get(ConfigService);
+  const appConfig = cs.get<AppConfig>('app');
+  if (!appConfig) throw new Error('missing appConfig');
+  Logger.log(
+    `server listening on port ${appConfig.port} at mode ${appConfig.env}`,
+  );
+
+  await app.listen(appConfig.port);
 }
 bootstrap();
