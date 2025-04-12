@@ -1,0 +1,10 @@
+node_modules
+dist
+*.log
+*.md
+.git
+requests
+coverage
+.vscode
+.idea
+*.pem

@@ -1,19 +1,19 @@
 ### Get all Task
-GET http://localhost:3000/v1/tasks/
+GET http://18.140.56.142/v1/tasks/
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYTUyMWRmZi0xNmRkLTRmOGQtODk2MC1iNmQ2ZDVhMWQzY2EiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQzNTk2MjYsImV4cCI6MTc0NDM2MzIyNiwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.lH645Ka4M9654YnBxrweQ3jiYIO2IfNpFIle8YlAO9I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY3NWNjMC1lYjVhLTRjYjItYTY5ZC1kZmI0YzAxNGNmZWQiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQ0NTI1NjEsImV4cCI6MTc0NDQ1NjE2MSwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.mqTdbf6Zvc2deQBqAQKA_FiDP6bWvtuNB4gyHvRie2s
 
 ### Create Task
-POST http://localhost:3000/v1/tasks/
+POST http://18.140.56.142/v1/tasks/
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzYTUyMWRmZi0xNmRkLTRmOGQtODk2MC1iNmQ2ZDVhMWQzY2EiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQzNTk2MjYsImV4cCI6MTc0NDM2MzIyNiwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.lH645Ka4M9654YnBxrweQ3jiYIO2IfNpFIle8YlAO9I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY3NWNjMC1lYjVhLTRjYjItYTY5ZC1kZmI0YzAxNGNmZWQiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQ0NTI1NjEsImV4cCI6MTc0NDQ1NjE2MSwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.mqTdbf6Zvc2deQBqAQKA_FiDP6bWvtuNB4gyHvRie2s
 
 
 {
-  "title": "new task 1 by user",
-  "description": "this is new task one by user"
+  "title": "new task 2 by user",
+  "description": "this is new task two by user at aws"
 }
 
 ### Get task by id

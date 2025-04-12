@@ -22,7 +22,6 @@ export class TasksController {
   @Version('1')
   @Post()
   async create(@Req() req: AuthRequest, @Body() createTaskDto: CreateTaskDto) {
-    console.log(req.authenticateUser);
     return await this.tasksService.create(
       req.authenticateUser.id,
       createTaskDto,

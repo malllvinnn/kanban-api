@@ -1,4 +1,16 @@
 services:
+  kanban_service:
+    container_name: kanban_service
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_HOST: kanban_be_postgres
+    depends_on:
+      - kanban_be_postgres
+
   kanban_be_postgres:
     container_name: kanban_be_postgres
     image: postgres:latest

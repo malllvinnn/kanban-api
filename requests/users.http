@@ -1,5 +1,5 @@
 ### create/register user
-POST http://localhost:3000/users/register/
+POST http://18.140.56.142/users/register/
 Content-Type: application/json
 Accept: application/json
 
@@ -10,7 +10,7 @@ Accept: application/json
 }
 
 ### login user
-POST http://localhost:3000/users/login/
+POST http://18.140.56.142/users/login/
 Content-Type: application/json
 Accept: application/json
 
