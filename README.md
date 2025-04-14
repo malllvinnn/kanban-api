@@ -65,7 +65,7 @@ DATABASE_USERNAME=kanban-be
 DATABASE_PASSWORD=Yourpassword1
 DATABASE_DATABASE=kanban-be
 ```
-> 💡 **Note:** Sesuaikan dengan setup yang kita inginkan
+> 💡 **Note:** Adjust to your development environment
 ## 🐳 Run with Docker
 ```yml
 docker compose up --build -d
