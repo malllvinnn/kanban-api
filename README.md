@@ -62,7 +62,7 @@ JWT_ISSUER=kanban-be
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_USERNAME=kanban-be
-DATABASE_PASSWORD=kanban-be
+DATABASE_PASSWORD=Yourpassword1
 DATABASE_DATABASE=kanban-be
 ```
 > 💡 **Note:** Sesuaikan dengan setup yang kita inginkan
