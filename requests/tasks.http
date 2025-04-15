@@ -2,13 +2,13 @@
 GET http://18.140.56.142/v1/tasks/
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY3NWNjMC1lYjVhLTRjYjItYTY5ZC1kZmI0YzAxNGNmZWQiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQ0NTI1NjEsImV4cCI6MTc0NDQ1NjE2MSwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.mqTdbf6Zvc2deQBqAQKA_FiDP6bWvtuNB4gyHvRie2s
+Authorization: Bearer <Token>
 
 ### Create Task
 POST http://18.140.56.142/v1/tasks/
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY3NWNjMC1lYjVhLTRjYjItYTY5ZC1kZmI0YzAxNGNmZWQiLCJuYW1lIjoiQWxleCBCaXp6ZXIiLCJlbWFpbCI6ImFsbEBnbWFpbC5jb20iLCJpYXQiOjE3NDQ0NTI1NjEsImV4cCI6MTc0NDQ1NjE2MSwiYXVkIjoia2FuYmFuLWJlIiwiaXNzIjoia2FuYmFuLWJlIn0.mqTdbf6Zvc2deQBqAQKA_FiDP6bWvtuNB4gyHvRie2s
+Authorization: Bearer <Token>
 
 
 {
@@ -20,13 +20,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY3NWNjM
 GET http://localhost:3000/v1/tasks/d27a81b5-86fd-4f53-bffe-d67f9f8e61c8
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
+Authorization: Bearer <Token>
 
 ### Update task
 PATCH http://localhost:3000/v1/tasks/d27a81b5-86fd-4f53-bffe-d67f9f8e61c8
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
+Authorization: Bearer <Token>
 
 {
   "title": "new task two update",
@@ -37,4 +37,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1Y
 DELETE  http://localhost:3000/v1/tasks/44642933-449b-4e22-b316-80f08447e79a
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzQzMDA1YS0zNzk5LTQzMTMtYjZhZS1hMWMyOTNkZmZhMjUiLCJuYW1lIjoiU2FuZGkgRHdpIiwiZW1haWwiOiJzYW5AZ21haWwuY29tIiwiaWF0IjoxNzQ0MDE3ODQ5LCJleHAiOjE3NDQwMjE0NDksImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.eTnljcCbDTlsKa3I-IDDq7PWMSBwBOi4aoIWpf1MPu8
+Authorization: Bearer <Token>
